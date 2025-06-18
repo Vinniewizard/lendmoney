@@ -1,3 +1,5 @@
-web: gunicorn task_platform.wsgi --log-file - 
+#web: gunicorn task_platform.wsgi --log-file - 
 #or works good with external database
-web: python manage.py migrate && gunicorn task_platform.wsgi
+#web: python manage.py migrate && gunicorn task_platform.wsgi
+
+gunicorn lendMoney.wsgi:application

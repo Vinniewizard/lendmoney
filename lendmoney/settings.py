@@ -31,11 +31,12 @@ ALLOWED_HOSTS = [
     "web-production-fea6d.up.railway.app",
     "127.0.0.1",
     "localhost",
+    '.onrender.com'
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://vintech-technologies.up.railway.app",
-    "https://vintech-technologies.up.railway.app",  # Add both HTTPS and HTTP just in case
+   # "https://vintech-technologies.up.railway.app",
+   # "https://vintech-technologies.up.railway.app",  # Add both HTTPS and HTTP just in case
 ]
 #hello mr 
 
