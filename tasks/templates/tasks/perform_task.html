@@ -1,0 +1,309 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Page</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+  <!-- CSRF Token (for JavaScript access) -->
+  <form style="display:none;">{% csrf_token %}</form>
+
+  <style>
+    body {
+      text-align: center;
+      padding-top: 20px;
+      background-color: blueviolet;
+    }
+    .task-container {
+      max-width: 500px;
+      margin: auto;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      background-color: rgb(64, 247, 192);
+    }
+    .completion-message {
+      margin-top: 20px;
+      font-size: 20px;
+      font-weight: bold;
+      color: green;
+    }
+    /* Virtual Apps and Ads Sections */
+    .apps-list, .ads-list {
+      margin-top: 20px;
+      text-align: left;
+    }
+    .app-item, .ad-item {
+      background: #fff;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 6px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .app-item button, .ad-item button {
+      margin-left: 10px;
+    }
+    #status-message {
+      color: red;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+<nav class="mt-2">
+   <!-- Action Buttons -->
+    <div class="container my-5">
+      <div class="row text-center">
+        <div class="col-md-4 mb-4">
+          <a href="{% url 'income_summary' %}" class="btn btn-lg btn-success btn-block py-3 action-btn">Income Summary</a>
+        </div><br>
+        <div class="col-md-4 mb-4">
+          <a href="{% url 'choose_plan' %}" class="btn btn-lg btn-danger btn-block py-3 action-btn">Upgrade new plan </a>
+        </div><br>
+        <div class="col-md-4 mb-4">
+         <a href="{% url 'spin_wheel_view' %}" class="btn btn-primary">Spin the Wheel</a>
+        </div><br>
+
+
+    </div>
+</nav>
+  <div class="container">
+    <h1 class="my-3">Task Page</h1>
+    <div class="task-container">
+      {% if not user.userprofile.plan %}
+        <h3>You have not chosen a plan yet!</h3>
+        <p>Please <a href="{% url 'choose_plan' %}">choose your plan</a> to start earning.</p>
+      {% else %}
+        <!-- Virtual Apps Section -->
+        <div class="apps-list" id="apps-list">
+          <h3> Apps to Download</h3>
+        </div>
+        <!-- Virtual Ads Section -->
+        <div class="ads-list" id="ads-list">
+          <h3> Ads to Watch</h3>
+        </div>
+        <!-- Completion Message -->
+        <div id="completion-message" class="completion-message" style="display:none;">
+          Congratulations! You have completed today's tasks.
+        </div>
+      {% endif %}
+      <div id="status-message"></div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+  <script>
+    function getCSRFToken() {
+      return document.querySelector('[name=csrfmiddlewaretoken]').value;
+    }
+    function updateBalance(newBalance) {
+      console.log("Updated balance:", newBalance);
+      // You can update the UI balance display if desired.
+    }
+
+    {% if user.userprofile.plan %}
+      // Define virtual apps and ads arrays
+      const virtualApps = [
+        "Speedy Messenger",
+        "Galaxy Browser",
+        "Magic Puzzle",
+        "Crypto Tracker",
+        "Virtual VPN",
+        "Zen Fitness",
+        "Photo Magic"
+      ];
+      const virtualAds = [
+        "Ad: Amazing Shoes",
+        "Ad: Super Car",
+        "Ad: Discount Flights",
+        "Ad: New Smartphone",
+        "Ad: Healthy Snacks",
+        "Ad: Exclusive Watches",
+        "Ad: Premium Headphones"
+      ];
+
+      // Calculate available tasks from context variables
+      const minesLeft = {{ daily_mines|default:0 }} - {{ mines_done|default:0 }};
+      const adsLeft = {{ daily_ads|default:0 }} - {{ ads_watched|default:0 }};
+
+      window.addEventListener("DOMContentLoaded", () => {
+        const appsListDiv = document.getElementById("apps-list");
+        const adsListDiv = document.getElementById("ads-list");
+
+        // Clear lists (preserve header)
+        appsListDiv.innerHTML = "<h3> Apps to Download</h3>";
+        adsListDiv.innerHTML = "<h3> Ads to Watch</h3>";
+
+        // If no tasks available, show a message and do not populate lists
+        if (minesLeft <= 0) {
+          appsListDiv.innerHTML += "<p>No apps available for download today.</p>";
+        }
+        if (adsLeft <= 0) {
+          adsListDiv.innerHTML += "<p>No ads available for watching today.</p>";
+        }
+        if (minesLeft <= 0 && adsLeft <= 0) {
+          document.getElementById("completion-message").style.display = "block";
+          return;
+        }
+
+        // Shuffle arrays and slice to available count
+        let apps = [...virtualApps].sort(() => Math.random() - 0.5).slice(0, minesLeft);
+        let ads = [...virtualAds].sort(() => Math.random() - 0.5).slice(0, adsLeft);
+
+        apps.forEach(appName => {
+          const appItem = createAppItem(appName);
+          appsListDiv.appendChild(appItem);
+        });
+        ads.forEach(adName => {
+          const adItem = createAdItem(adName);
+          adsListDiv.appendChild(adItem);
+        });
+      });
+
+      function createAppItem(appName) {
+        const container = document.createElement("div");
+        container.className = "app-item";
+        container.innerHTML = `
+          <span>${appName}</span>
+          <button class="btn btn-sm btn-info">Download</button>
+        `;
+        const downloadBtn = container.querySelector("button");
+        downloadBtn.addEventListener("click", () => simulateAppDownload(container, appName, downloadBtn));
+        return container;
+      }
+
+      function simulateAppDownload(container, appName, button) {
+        button.disabled = true;
+        alert(`Starting download for ${appName} (simulation only)...`);
+        let seconds = 20;
+        const originalText = button.textContent;
+        button.textContent = `Downloading... ${seconds}s`;
+        const interval = setInterval(() => {
+          seconds--;
+          button.textContent = `Downloading... ${seconds}s`;
+          if (seconds <= 0) {
+            clearInterval(interval);
+            alert(`Download complete for ${appName}! Earning your mine reward...`);
+            callMineEndpoint(button);
+            container.remove();
+            // Recalculate remaining available tasks after removal
+            checkCompletion();
+          }
+        }, 1000);
+      }
+
+      function callMineEndpoint(button) {
+        button.disabled = true;
+        fetch("/tasks/mine/", {
+          method: "POST",
+          headers: {
+            "X-CSRFToken": getCSRFToken(),
+            "Content-Type": "application/json"
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.status === "success") {
+            alert("You earned $ " + data.reward + " from this download simulation!");
+            updateBalance(data.balance);
+          } else {
+            alert(data.message || "Error during mining simulation.");
+          }
+          button.disabled = false;
+        })
+        .catch(error => {
+          console.error("Error calling /tasks/mine/:", error);
+          alert("Error during the download simulation.");
+          button.disabled = false;
+        });
+      }
+
+      function createAdItem(adName) {
+        const container = document.createElement("div");
+        container.className = "ad-item";
+        container.innerHTML = `
+          <span>${adName}</span>
+          <button class="btn btn-sm btn-warning">Watch</button>
+        `;
+        const watchBtn = container.querySelector("button");
+        watchBtn.addEventListener("click", () => simulateAdWatch(container, adName, watchBtn));
+        return container;
+      }
+
+      function simulateAdWatch(container, adName, button) {
+        button.disabled = true;
+        const watchTime = Math.floor(Math.random() * 26) + 5;
+        alert(`Starting to watch ${adName} for ~${watchTime} seconds (simulation only)...`);
+        let seconds = watchTime;
+        const originalText = button.textContent;
+        button.textContent = `Watching... ${seconds}s`;
+        const interval = setInterval(() => {
+          seconds--;
+          button.textContent = `Watching... ${seconds}s`;
+          if (seconds <= 0) {
+            clearInterval(interval);
+            alert(`Ad watch complete for ${adName}! Earning your ad reward...`);
+            callWatchAdEndpoint(button);
+            container.remove();
+            checkCompletion();
+          }
+        }, 1000);
+      }
+
+      function callWatchAdEndpoint(button) {
+        button.disabled = true;
+        fetch("/tasks/watch_ad/", {
+          method: "POST",
+          headers: {
+            "X-CSRFToken": getCSRFToken(),
+            "Content-Type": "application/json"
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.status === "success") {
+            alert("You earned $ " + data.reward + " from watching this ad!");
+            updateBalance(data.balance);
+          } else {
+            alert(data.message || "Error during ad simulation.");
+          }
+          button.disabled = false;
+        })
+        .catch(error => {
+          console.error("Error calling /tasks/watch_ad/:", error);
+          alert("Error during the ad simulation.");
+          button.disabled = false;
+        });
+      }
+
+      // Check if all tasks are completed by verifying that both apps and ads lists are empty
+      function checkCompletion() {
+        const remainingApps = document.getElementById("apps-list").querySelectorAll(".app-item").length;
+        const remainingAds = document.getElementById("ads-list").querySelectorAll(".ad-item").length;
+        if (remainingApps === 0 && remainingAds === 0) {
+          document.getElementById("completion-message").style.display = "block";
+        }
+      }
+    {% endif %}
+  </script>
+
+  <div class="col-md-4 mb-4">
+          <a href="{% url 'home' %}" class="btn btn-lg btn-danger btn-block py-3 action-btn">Back to Dashboard </a>
+        </div><br>
+
+
+
+
+</body>
+</html>

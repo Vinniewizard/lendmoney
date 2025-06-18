@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deposit Funds</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            text-align: center;
+        }
+        h2 { color: #333; }
+        .form-group {
+            text-align: left;
+            margin-bottom: 15px;
+        }
+        label { font-weight: bold; }
+        select, input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover { background-color: #45a049; }
+        .error { color: red; font-size: 14px; }
+        .success { color: green; font-size: 14px; }
+        .instructions {
+            display: none;
+            text-align: left;
+            background: #f9f9f9;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        .copy-btn {
+            cursor: pointer;
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            font-size: 12px;
+            border-radius: 5px;
+            margin-left: 5px;
+        }
+        .copy-btn:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Deposit Funds</h2>
+
+        <!-- Display Django Messages -->
+        {% if messages %}
+            <div id="responseMessage">
+                {% for message in messages %}
+                    <p class="{{ message.tags }}">{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form method="POST" action="{% url 'deposit' %}">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label>Deposit Method:</label>
+                <select id="deposit_method" name="payment_method" required>
+                    <option value="">Select Method</option>
+                    <option value="mpesa">M-Pesa</option>
+                    <option value="airtel">Airtel Money</option>
+                    <option value="binance">Binance (USDT - TRC20)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Phone Number:</label>
+                <input type="text" name="phone_number" placeholder="Enter Your Phone Number" required>
+            </div>
+
+            <div class="form-group">
+                <label>Amount Deposited:</label>
+                <input type="number" name="amount" placeholder="Enter Amount" required>
+            </div>
+
+            <div class="form-group">
+                <label>Transaction Reference:</label>
+                <input type="text" name="reference" placeholder="Enter Transaction Reference" required>
+            </div>
+
+            <!-- Binance Transaction Hash (Hidden by Default) -->
+            <div class="form-group" id="binance_txid" style="display: none;">
+                <label>Transaction Hash (TxID):</label>
+                <input type="text" name="binance_txid" placeholder="Enter Binance TxID">
+            </div>
+
+            <button type="submit">Submit for Approval</button>
+        </form>
+
+        <!-- Deposit Instructions -->
+        <div id="instructions_mpesa" class="instructions">
+            <h3>📌 How to Pay via M-Pesa</h3>
+            <p>1️⃣ Dial <strong>*334#</strong> or use the M-Pesa App.</p>
+            <p>2️⃣ Select <strong>Lipa na M-Pesa</strong> → <strong>Buy Goods and Services</strong>.</p>
+            <p>3️⃣ Enter <strong>Till Number: 3275274</strong>.</p>
+            <p>4️⃣ Enter Amount & Confirm with M-Pesa PIN.</p>
+            <p>5️⃣ Enter the Reference Number from the SMS above.</p>
+        </div>
+
+        <div id="instructions_airtel" class="instructions">
+            <h3>📌 How to Pay via Airtel Money</h3>
+            <p>1️⃣ Open Airtel Money Menu.</p>
+            <p>2️⃣ Select <strong>Send Money</strong> → <strong>To M-Pesa</strong>.</p>
+            <p>3️⃣ Enter <strong>M-Pesa Number: 0732242933</strong>.</p>
+            <p>4️⃣ Enter Amount & Confirm.</p>
+            <p>5️⃣ Enter the Reference Number from the SMS above.</p>
+        </div>
+
+        <div id="instructions_binance" class="instructions">
+            <h3>📌 How to Pay via Binance (USDT - TRC20)</h3>
+            <p>1️⃣ Open your <strong>Binance</strong> app or log in to your Binance account.</p>
+            <p>2️⃣ Navigate to <strong>Wallet</strong> → <strong>Funding</strong> → <strong>Withdraw</strong>.</p>
+            <p>3️⃣ Select <strong>USDT (TetherUS)</strong>.</p>
+            <p>4️⃣ Select the **TRX (Tron TRC20)** network.</p>
+            <p>5️⃣ Copy and paste this deposit address:</p>
+            
+            <div>
+                <strong>📌 USDT (TRC20) Address:</strong> 
+                <input type="text" value="THTUL7vzpCNXoQhDn5JEkBAL834uGsLtSp" readonly>
+                <button class="copy-btn" onclick="copyToClipboard(this)">Copy</button>
+            </div>
+
+            <p>6️⃣ Enter the amount and confirm the transaction.</p>
+            <p>7️⃣ After the transaction is complete, enter the **Transaction Hash (TxID)** in the form above.</p>
+        </div>
+    </div>
+
+    <script>
+        function copyToClipboard(button) {
+            var input = button.previousElementSibling;
+            input.select();
+            document.execCommand("copy");
+            alert("Copied: " + input.value);
+        }
+
+        document.getElementById("deposit_method").addEventListener("change", function() {
+            document.getElementById("instructions_mpesa").style.display = (this.value === "mpesa") ? "block" : "none";
+            document.getElementById("instructions_airtel").style.display = (this.value === "airtel") ? "block" : "none";
+            document.getElementById("instructions_binance").style.display = (this.value === "binance") ? "block" : "none";
+            document.getElementById("binance_txid").style.display = (this.value === "binance") ? "block" : "none";
+        });
+    </script>
+</body>
+</html>

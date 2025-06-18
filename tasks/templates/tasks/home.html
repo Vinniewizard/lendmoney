@@ -1,0 +1,258 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+{% if not user.is_authenticated %}
+  <!-- Guest View: Visitors can explore info, but earning actions are hidden -->
+  <div class="hero-section text-center py-5" style="background: url('{% static 'images/hero-bg.jpg' %}') no-repeat center; background-size: cover;">
+    <div class="container text-red">
+      <h2 class="display-4 font-weight-bold">Welcome to Vintech-Technologies</h2> 
+      <p class="lead">Discover our innovative platform that empowers you to earn money online with flexible plans and real-time rewards.</p>
+      <a href="{% url 'register' %}" class="btn btn-lg btn-primary mr-2">Join Now</a>
+      <a href="{% url 'login' %}" class="btn btn-lg btn-secondary">Login</a>
+    </div>
+  </div>
+
+  <div class="container my-5 text-center">
+    <h3 class="font-weight-bold">Explore Our Platform</h3>
+    <p>Learn how our platform works, read testimonials, view FAQs, and discover earning opportunities. Sign up to unlock tasks, deposits, withdrawals, and plan options.</p>
+  </div>
+
+  <div class="container my-5 text-center">
+      <h3 class="font-weight-bold">What's next</h3>
+      <p>Even without an active plan, you can explore our platform and learn how our system works. Once you choose a plan, you'll unlock full earning functionality.</p>
+    </div>
+  <!-- How You Earn Section -->
+    <div class="container my-5">
+      <h3 class="text-center font-weight-bold">How You Earn</h3>
+      <div class="row">
+        <div class="col-md-4 mb-4">
+          <div class="card shadow-sm">
+            <div class="card-body text-center">
+              <h5 class="card-title">Downloads Apps</h5>
+              <p class="card-text">Download all the available apps on your task page to earn a fixed reward per D.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="card shadow-sm">
+            <div class="card-body text-center">
+              <h5 class="card-title">Watching Ads</h5>
+              <p class="card-text">Watch all the ads to earn bonus rewards within your daily limit .</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="card shadow-sm">
+            <div class="card-body text-center">
+              <h5 class="card-title">Referral Bonus</h5>
+              <p class="card-text">(Optional) Invite friends and earn extra rewards when they join and upgrade their plans.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Platform Description -->
+    <div class="container text-center my-5">
+      <h3 class="font-weight-bold">Why Join Vintech-Technologies?</h3>
+      <p class="lead">
+         Vintech-Technologies was initiated in the US in 2024 and has empowered millions to earn daily incomes.
+         Launched in Kenya on January 10, 2025, our platform offers flexible earning opportunities and secure transactions.
+         Join us now and start earning big!
+      </p>
+    </div>
+
+{% else %}
+  {% if not user.userprofile.plan %}
+    <!-- Registered but no active plan: Show info with a prompt to choose a plan -->
+    <div class="hero-section text-center py-5 bg-dark text-white">
+      <div class="container">
+        <h2 class="display-4">Welcome, {{ user.first_name }}!</h2>
+        <p class="lead">You're registered! To start earning, please choose a plan.</p>
+        <a href="{% url 'choose_plan' %}" class="btn btn-lg btn-warning">Choose Your Plan</a>
+      </div>
+    </div>
+
+    <div class="container my-5 text-center">
+      <h3 class="font-weight-bold">Explore Our Platform</h3>
+      <p>Even without an active plan, you can explore our platform and learn how our system works. Once you choose a plan, you'll unlock full earning functionality.</p>
+    </div>
+
+     <div class="container my-5 text-center">
+    <h3 class="font-weight-bold">Explore Our Platform</h3>
+    <p>Learn how our platform works, read testimonials, view FAQs, and discover earning opportunities. Sign up to unlock tasks, deposits, withdrawals, and plan options.</p>
+  </div>
+
+  <div class="container my-5 text-center">
+      <h3 class="font-weight-bold">What's next</h3>
+      <p>Even without an active plan, you can explore our platform and learn how our system works. Once you choose a plan, you'll unlock full earning functionality.</p>
+    </div>
+  <!-- How You Earn Section -->
+    <div class="container my-5">
+      <h3 class="text-center font-weight-bold">How You Earn</h3>
+      <div class="row">
+        <div class="col-md-4 mb-4">
+          <div class="card shadow-sm">
+            <div class="card-body text-center">
+              <h5 class="card-title">Downloads Apps</h5>
+              <p class="card-text">Download all the available apps on your task page to earn a fixed reward per D.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="card shadow-sm">
+            <div class="card-body text-center">
+              <h5 class="card-title">Watching Ads</h5>
+              <p class="card-text">Watch all the ads to earn bonus rewards within your daily limit .</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="card shadow-sm">
+            <div class="card-body text-center">
+              <h5 class="card-title">Referral Bonus</h5>
+              <p class="card-text">(Optional) Invite friends and earn extra rewards when they join and upgrade their plans.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Platform Description -->
+    <div class="container text-center my-5">
+      <h3 class="font-weight-bold">Why Join Vintech-Technologies?</h3>
+      <p class="lead">
+         Vintech-Technologies was initiated in the US in 2024 and has empowered millions to earn daily incomes.
+         Launched in Kenya on January 10, 2025, our platform offers flexible earning opportunities and secure transactions.
+         Join us now and start earning big!
+      </p>
+    </div>
+
+  {% else %}
+    <!-- Registered with an active plan: Full Dashboard -->
+   
+    <!-- Account Overview -->
+    <div class="container my-4">
+      <div class="card shadow-sm border-0">
+        <div class="card-body text-center">
+          <h4 class="font-weight-bold">Account Overview</h4>
+          <p>Balance: <strong class="text-success">USD {{ user.userprofile.balance }}</strong></p>
+          <p>Active Plan: <strong>{{ user.userprofile.plan.name }}</strong></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="container my-5">
+      <div class="row text-center">
+        <div class="col-md-4 mb-4">
+          <a href="{% url 'deposit' %}" class="btn btn-lg btn-success btn-block py-3 action-btn">Deposit</a>
+        </div>
+        <div class="col-md-4 mb-4">
+          <a href="{% url 'withdrawal' %}" class="btn btn-lg btn-danger btn-block py-3 action-btn">Withdraw</a>
+        </div>
+        <div class="col-md-4 mb-4">
+          <a href="{% url 'perform_task' %}" class="btn btn-lg btn-info btn-block py-3 action-btn">Perform Tasks</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Referral Section -->
+    <div class="container text-center my-5">
+      <h3 class="font-weight-bold">Invite & Earn More</h3>
+      <p class="lead">Refer friends using your unique link and earn extra rewards when they join and upgrade their plans.</p>
+      <a href="{% url 'invite' %}" class="btn btn-primary btn-lg action-btn">Get Your Referral Link</a>
+    </div>
+
+    <!-- How You Earn Section -->
+    <div class="container my-5">
+      <h3 class="text-center font-weight-bold">How You Earn</h3>
+      <div class="row">
+        <div class="col-md-4 mb-4">
+          <div class="card shadow-sm">
+            <div class="card-body text-center">
+              <h5 class="card-title">Mining</h5>
+              <p class="card-text">Complete mining tasks to earn a fixed reward per task.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="card shadow-sm">
+            <div class="card-body text-center">
+              <h5 class="card-title">Watching Ads</h5>
+              <p class="card-text">Activate and watch ads to earn bonus rewards within your daily limit.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="card shadow-sm">
+            <div class="card-body text-center">
+              <h5 class="card-title">Referral Bonus</h5>
+              <p class="card-text">Invite friends and earn extra rewards when they join and upgrade their plans.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Platform Description -->
+    <div class="container text-center my-5">
+      <h3 class="font-weight-bold">Why Join Vintech-Technologies?</h3>
+      <p class="lead">
+         Vintech-Technologies was initiated in the US in 2024 and has empowered millions to earn daily incomes.
+         Launched in Kenya on January 10, 2025, our platform offers flexible earning opportunities and secure transactions.
+         Join us now and start earning big!
+      </p>
+    </div>
+  {% endif %}
+{% endif %}
+
+<!-- Recent Withdrawals Ticker Section (for active users) -->
+{% if user.is_authenticated and user.userprofile.plan %}
+<div class="container">
+    <h2 class="text-center">Recent Withdrawals</h2>
+    <div id="withdrawal-box">
+        <p id="withdrawal-text">Loading recent withdrawals...</p>
+    </div>
+</div>
+
+<!-- JavaScript to Fetch Withdrawals Randomly -->
+<script>
+    function fetchWithdrawal() {
+        fetch("{% url 'get_random_withdrawal' %}")
+        .then(response => response.json())
+        .then(data => {
+            if (!data.error) {
+                document.getElementById("withdrawal-text").innerHTML =
+                    `💸 <b>${data.masked_info}</b> just withdrew <b>${data.amount}</b> via <b>${data.method}</b>! 🚀`;
+            }
+        });
+        let nextUpdate = Math.floor(Math.random() * (10000 - 2000 + 1)) + 2000;
+        setTimeout(fetchWithdrawal, nextUpdate);
+    }
+    document.addEventListener("DOMContentLoaded", fetchWithdrawal);
+</script>
+
+<style>
+    #withdrawal-box {
+        max-width: 500px;
+        margin: 20px auto;
+        padding: 10px;
+        background: #fffae6;
+        border: 1px solid #ffd700;
+        border-radius: 8px;
+        text-align: center;
+        font-size: 16px;
+        font-weight: bold;
+        color: #d98300;
+        animation: fadeIn 1s ease-in-out;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+</style>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,230 @@
+/* 
+   Vintech-Technologies Platform Stylesheet 
+   -----------------------------------------
+   Modern, professional, and responsive UI.
+*/
+
+/* Global Reset & Box Sizing */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Body Styling */
+body {
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+/* Header */
+header {
+  background-color: #003366;
+  color: #fff;
+  padding: 20px 0;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+header .brand-logo {
+  max-width: 120px;
+  display: block;
+  margin: 0 auto 10px;
+}
+header h1 {
+  font-size: 2.2rem;
+  font-weight: bold;
+}
+nav {
+  margin-top: 10px;
+}
+nav a {
+  color: #fff;
+  margin: 0 15px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: color 0.3s ease;
+}
+nav a:hover {
+  color: #ffd700;
+}
+
+/* Main Content Container */
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 30px auto;
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 6px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  margin-bottom: 15px;
+  color: #003366;
+  font-weight: bold;
+}
+h1 { font-size: 2rem; }
+h2 { font-size: 1.75rem; }
+h3 { font-size: 1.5rem; }
+
+/* Paragraphs */
+p {
+  margin-bottom: 15px;
+}
+
+/* Buttons */
+.btn, 
+button, 
+input[type="submit"] {
+  display: inline-block;
+  padding: 12px 20px;
+  background-color: #0056b3;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.btn:hover,
+button:hover,
+input[type="submit"]:hover {
+  background-color: #003366;
+  transform: scale(1.05);
+}
+
+/* Forms */
+form {
+  margin-bottom: 20px;
+}
+form input[type="text"],
+form input[type="password"],
+form input[type="email"],
+form input[type="number"],
+form textarea,
+form select {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: border 0.3s ease;
+}
+form input:focus,
+form textarea:focus,
+form select:focus {
+  border-color: #0056b3;
+  outline: none;
+}
+
+/* Alerts & Notifications */
+.alert {
+  padding: 12px 20px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+.alert-info { background: #d9edf7; color: #31708f; }
+.alert-success { background: #dff0d8; color: #3c763d; }
+.alert-warning { background: #fcf8e3; color: #8a6d3b; }
+.alert-danger { background: #f2dede; color: #a94442; }
+
+/* Footer */
+footer {
+  background-color: #003366;
+  color: #fff;
+  text-align: center;
+  padding: 15px 0;
+  margin-top: 30px;
+  font-size: 0.9rem;
+}
+footer p {
+  margin: 0;
+}
+
+/* Custom Components */
+
+/* Plan Selection */
+.plan-list {
+  list-style: none;
+}
+.plan-list li {
+  margin-bottom: 20px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background-color: #fafafa;
+  transition: all 0.3s ease;
+}
+.plan-list li:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+.plan-list li h3 {
+  font-size: 1.5rem;
+  color: #0056b3;
+}
+
+/* Invite Input */
+#inviteLink {
+  width: 80%;
+  padding: 12px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Earning Section Enhancements */
+.earning-box {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.earning-box:hover {
+  transform: scale(1.05);
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Action Buttons */
+.action-btn {
+  transition: transform 0.2s ease, background-color 0.3s ease;
+}
+.action-btn:hover {
+  transform: scale(1.1);
+  background-color: #002244 !important;
+}
+
+/* Marquee for Ads */
+.ad-marquee {
+  background-color: #fff;
+  border-top: 1px solid #ccc;
+  padding: 10px 0;
+  margin-top: 20px;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  header h1 {
+    font-size: 1.8rem;
+  }
+  nav a {
+    font-size: 1rem;
+    margin: 0 8px;
+  }
+  .container {
+    padding: 20px;
+  }
+  .btn, button, input[type="submit"] {
+    font-size: 0.9rem;
+    padding: 10px;
+  }
+  #inviteLink {
+    width: 100%;
+  }
+}
